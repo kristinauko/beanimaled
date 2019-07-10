@@ -13,7 +13,7 @@ I implemented:
   
 ## Screencast  
   
-![](https://giphy.com/embed/fxHL8QoLL24YFbYqmz)
+![](https://media.giphy.com/media/fxHL8QoLL24YFbYqmz/giphy.gif)
   
 ## Instructions  
   
