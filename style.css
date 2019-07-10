@@ -1,0 +1,64 @@
+#wrapper {
+  display: flex;
+  width: 556px;
+  height: 400px;
+  margin: 20px;
+  background-image: url("./animals/background.png");
+  /*Source: https://swapnilrane24.itch.io/nature-background?download;*/
+  border-radius: 8px;
+  border: 5px solid #972e5c;
+}
+
+#menu-div {
+  border-right: solid;
+  border-width: 5px;
+  border-color: #972e5c;
+  padding: 20px;
+  margin-right: 20px;
+}
+
+#title {
+  text-shadow: 0px 1px 0px #979bc7;
+  color: #972e5c;
+  font-family: 'Akronim';
+  font-size: 22px;
+  font-weight: bold;
+}
+
+button {
+  box-shadow: 3px 4px 0px 0px #899599;
+  background: linear-gradient(to bottom, #d98bae 5%, #bab1ba 100%);
+  background-color: #d98bae;
+  border-radius: 8px;
+  border: 1px solid #972e5c;
+  color: #545859;
+  font-family: Arial;
+  padding: 7px 25px;
+  text-shadow: 0px 1px 0px #979bc7;
+}
+
+button:active {
+  position: relative;
+  top: 1px;
+}
+
+
+
+#stage {
+  position: relative;
+  align-self: center;
+  width: 360px;
+  height: 360px;
+  padding-right: 15px;
+}
+
+.cell {
+  display: block;
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border: 1px solid #972e5c;
+  border-radius: 8px;
+  box-shadow: 1px 2px 0px 0px #899599;
+  background: linear-gradient(to bottom, #d98bae 5%, #bab1ba 100%);
+}

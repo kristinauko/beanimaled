@@ -1,0 +1,319 @@
+<!doctype html>
+<title>Beanimaled</title>
+
+<link href='https://fonts.googleapis.com/css?family=Akronim' rel='stylesheet'>
+<link rel="stylesheet" type="text/css" href="style.css">
+
+<div id="wrapper">
+  <div id="menu-div">
+    <p id="title">BEANIMALED</p>
+    <button>NEW GAME</button>
+  </div>
+  <div id="stage"></div>
+</div>
+
+<script>
+
+//Reference to element "stage"
+const stage = document.querySelector("#stage");
+
+//Number of rows and cols
+const gridSize = 8;
+
+//Values min and max for the map.
+const min = 1;
+const max = 7;
+
+//Generate map
+let map = generateMap(gridSize, min, max);
+
+//Map code
+const CHICK = 1;
+const COW = 2;
+const PARROT = 3; 
+const CROCODILE = 4;
+const ELEPHANT = 5;
+const HIPPO = 6;
+const PIG = 7;
+
+//The size of the cell
+const SIZE = 40;
+
+//Space between cells
+const SPACE = 5;
+
+//Display the array
+const ROWS = gridSize;
+const COLS = gridSize;
+
+render();
+
+//New game button
+const button = document.querySelector("button");
+button.style.cursor = "pointer";
+button.addEventListener("click", clickHandler, false);
+
+
+/* "New Game" button click handler */
+
+function clickHandler()
+{
+  map = generateMap(gridSize, min, max);
+  render();
+}
+
+
+/* Function renders the grid of tiles */
+
+function render() {
+
+  // Clear the stage 
+  if (stage.hasChildNodes()) {
+    for (let i = 0; i < ROWS * COLS; i++) {
+      stage.removeChild(stage.firstChild);
+    }
+  }
+
+  for(let row = 0; row < ROWS; row++) {
+
+    for(let column = 0; column < COLS; column++) {
+
+      //HTML element img - cell
+      let cell = document.createElement("img");
+      cell.setAttribute("class", "cell");
+      stage.appendChild(cell);
+
+      if(map[row][column] === COW) {
+        cell.src = "./animals/cow.png"; //Source: https://www.kenney.nl/assets/animal-pac
+      }
+      else if(map[row][column] === CHICK) {
+        cell.src = "./animals/chick.png";
+      }
+      else if(map[row][column] === PARROT) {
+        cell.src = "./animals/parrot.png";
+      }
+      else if(map[row][column] === CROCODILE) {
+        cell.src = "./animals/crocodile.png";
+      }
+      else if(map[row][column] === HIPPO) {
+        cell.src = "./animals/hippo.png";
+      }
+      else if(map[row][column] === ELEPHANT) {
+        cell.src = "./animals/elephant.png";
+      }
+      else if(map[row][column] === PIG) {
+        cell.src = "./animals/pig.png";
+      }
+
+      //Position the cell, 5 pixels around it
+      cell.style.top = row * (SIZE + SPACE)+ "px";
+      cell.style.left = column * (SIZE + SPACE) + "px";
+    }
+  }
+}
+
+
+/* Driver function creates and checks for valid map:
+1) generates map;
+2) checks for clusters;
+3) fixes clusters; 
+4) if clusters still exist, repeats the sequence five more times. 
+5) checks for eligible moves - at least three, otherwise generates new map.
+ */
+
+function generateMap(gridSize, min, max) {
+
+  let generatedMap = [];
+  let clusters = [null];
+  let count = 0;
+
+  while (clusters.length != 0 && count != 5) {
+
+    generatedMap = produceArray(gridSize, min, max);
+    clusters = findClusters(generatedMap);
+
+    for (let cluster of clusters) {
+      generatedMap = fixCluster(cluster, generatedMap);
+    } 
+    count += 1;  
+    clusters = findClusters(generatedMap);
+  } 
+  moves = findMoves(generatedMap);
+  if (moves.length > 3) {
+    return generatedMap;
+  } 
+  else {
+    generateMap(gridSize, min, max);
+  } 
+}
+
+
+/* Function produces two-dimentional array from randomly picked numbers */
+
+function produceArray(n, min, max) {
+
+  let array = new Array();
+  
+  for (let i = 0; i < n; i++) {
+
+    let new_array = new Array();
+
+    for (let j = 0; j < n; j++) {
+      number = Math.random() * (max - min) + min;
+      new_array.push(Math.round(number));
+    } 
+    array.push(new_array);
+  } return array;
+}
+
+
+/* Function finds clusters which is three or more items standing next to each other */
+
+function findClusters(array) {
+
+  let clusters = new Array();           
+  const length = array.length;
+  
+  // Check for clusters in rows
+  for (let i = 0; i < length; i++) {
+
+    let row_cluster = [];
+
+    for (let j = 1; j < length; j++) {
+      if (array[i][j-1] == array[i][j] && row_cluster.length == 0) {
+        row_cluster.push([i, j-1], [i, j]);
+      } 
+      else if (array[i][j-1] == array[i][j]) {
+        row_cluster.push([i, j]);
+        if (j == (length - 1) && row_cluster.length >= 3) {
+          clusters.push(row_cluster);
+          row_cluster = []; 
+        }
+      } 
+      else {
+        if (row_cluster.length >= 3) {
+          clusters.push(row_cluster);
+        } 
+        row_cluster = [];
+      }
+    }     
+  }  
+      
+  // Check for clusters in columns
+  for (let i = 0; i < length; i++) {
+
+    let col_cluster = [];
+
+    for (let j = 1; j < length; j++) {
+
+      if (array[j-1][i] == array[j][i] && col_cluster.length == 0) {
+        col_cluster.push([j-1, i], [j, i])
+      } 
+      else if (array[j-1][i] == array[j][i]) {
+        col_cluster.push([j, i]);
+        if (j == (length - 1) && col_cluster.length >= 3) {
+          clusters.push(col_cluster);
+          col_cluster = [];
+        }
+      } 
+      else {
+        if (col_cluster.length >= 3) {
+          clusters.push(col_cluster);
+        }  
+        col_cluster = [];  
+      }
+    }     
+  } return clusters
+}
+
+
+/*Function fixes cluster and returns valid (if possible) two-dimentional array*/
+
+function fixCluster(cluster, array) {
+
+  let xDirection = 0;
+  let yDirection = 0;
+
+  if (cluster[0][0] == cluster[1][0] && cluster[1][0] == cluster[2][0]) {
+    if (cluster[0][0] == 7) {
+        xDirection = -1;
+    } 
+    else {
+      xDirection = 1;
+    } 
+    yDirection = 0;
+  } 
+  else if (cluster[0][1] == cluster[1][1] && cluster[1][1] == cluster[2][1]) {
+    if (cluster[0][1] == 7) {
+        yDirection = -1;
+    } 
+    else {
+      yDirection = 1;
+    } 
+    xDirection = 0;
+  }
+  
+  for (let c of cluster) {
+    let x = c[0];
+    let y = c[1];
+
+    if (array[x][y] != array[x + xDirection][y + yDirection]) {
+      let temp = array[x][y];
+      array[x][y] = array[x + xDirection][y + yDirection]; 
+      array[x + xDirection][y + yDirection] = temp; 
+      break;
+    } 
+  } return array
+}
+
+
+/* Function finds all possible moves in two-dimentional array */
+
+function findMoves(array) {
+
+  let moves = [];
+  let temp = 0;
+  const LENGTH = array.length;
+
+  // Check horizontal swap
+  for (let i = 0; i < LENGTH; i++) {
+
+    let move = 0;
+
+    for (let j = 0; j < LENGTH - 1; j++) {
+      temp = array[i][j];
+      array[i][j] = array[i][j+1];
+      array[i][j+1] = temp;
+
+      move = findClusters(array);
+
+      if (move.length != 0) {
+          moves.push(move);
+      }
+      array[i][j+1] = array[i][j];
+      array[i][j] = temp;
+    }
+  }
+
+  // Check vertical swap
+  for (let i = 0; i < LENGTH; i++) {
+
+    let move = 0;
+
+    for (let j = 0; j < LENGTH - 1; j++) {
+      temp = array[j][i];
+      array[j][i] = array[j+1][i];
+      array[j+1][i] = temp;
+
+      move = findClusters(array);
+
+      if (move.length != 0) {
+          moves.push(move);
+      }
+      array[j+1][i] = array[j][i];
+      array[j][i] = temp;
+    }
+  } return moves;
+}
+
+</script>
