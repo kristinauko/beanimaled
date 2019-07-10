@@ -13,7 +13,7 @@ I implemented:
   
 ## Screencast  
   
-<iframe src="https://giphy.com/embed/fxHL8QoLL24YFbYqmz" width="480" height="374" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>  
+![](https://giphy.com/embed/fxHL8QoLL24YFbYqmz)
   
 ## Instructions  
   
