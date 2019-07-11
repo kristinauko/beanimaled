@@ -217,7 +217,8 @@ function fixCluster(cluster, array) {
   let yDirection = 0;
 
   if (cluster[0][0] == cluster[1][0] && cluster[1][0] == cluster[2][0]) {
-    if (cluster[0][0] == 7) {
+    //If this is the most right cell in row, move the item left
+    if (cluster[0][0] == gridSize - 1) {
         xDirection = -1;
     } 
     else {
@@ -226,7 +227,8 @@ function fixCluster(cluster, array) {
     yDirection = 0;
   } 
   else if (cluster[0][1] == cluster[1][1] && cluster[1][1] == cluster[2][1]) {
-    if (cluster[0][1] == 7) {
+    //If this is the most bottom cell in column, move the item up
+    if (cluster[0][1] == gridSize - 1) {
         yDirection = -1;
     } 
     else {
@@ -240,9 +242,7 @@ function fixCluster(cluster, array) {
     let y = c[1];
 
     if (array[x][y] != array[x + xDirection][y + yDirection]) {
-      let temp = array[x][y];
-      array[x][y] = array[x + xDirection][y + yDirection]; 
-      array[x + xDirection][y + yDirection] = temp; 
+      swapTiles(array, x, y, xDirection, yDirection);
       break;
     } 
   } return array
@@ -297,5 +297,17 @@ function findMoves(array) {
     }
   } return moves;
 }
+
+
+/* Function swaps two tiles */
+
+function swapTiles(array, x, y, xDirection, yDirection) {
+
+  let temp = array[x][y];
+  array[x][y] = array[x + xDirection][y + yDirection]; 
+  array[x + xDirection][y + yDirection] = temp; 
+  return array
+}
+
 
 </script>
