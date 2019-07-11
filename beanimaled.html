@@ -20,10 +20,6 @@ const stage = document.querySelector("#stage");
 //Number of rows and cols
 const gridSize = 8;
 
-//Values min and max for the map.
-const min = 0;
-const max = 6;
-
 //The size of the cell
 const SIZE = 40;
 
@@ -49,7 +45,6 @@ render();
 
 //New game button
 const button = document.querySelector("button");
-button.style.cursor = "pointer";
 button.addEventListener("click", clickHandler, false);
 
 
@@ -64,7 +59,7 @@ function clickHandler(){
 
 function render() {
 
-  let map = generateMap(gridSize, min, max);
+  let map = generateMap(gridSize);
 
   // Clear the stage 
   if (stage.hasChildNodes()) {
@@ -105,15 +100,16 @@ function render() {
 5) checks for eligible moves - at least three, otherwise generates new map.
  */
 
-function generateMap(gridSize, min, max) {
+function generateMap(gridSize) {
 
   let generatedMap = [];
   let clusters = [null];
   let count = 0;
 
+
   while (clusters.length != 0 && count != 5) {
 
-    generatedMap = produceArray(gridSize, min, max);
+    generatedMap = produceArray(gridSize);
     clusters = findClusters(generatedMap);
 
     for (let cluster of clusters) {
@@ -127,15 +123,17 @@ function generateMap(gridSize, min, max) {
     return generatedMap;
   } 
   else {
-    generateMap(gridSize, min, max);
+    generateMap(gridSize);
   } 
 }
 
 
 /* Function produces two-dimentional array from randomly picked numbers */
 
-function produceArray(n, min, max) {
+function produceArray(n) {
 
+  const MIN = 0;
+  const MAX = IMAGES.length - 1;
   let array = new Array();
   
   for (let i = 0; i < n; i++) {
@@ -143,7 +141,7 @@ function produceArray(n, min, max) {
     let new_array = new Array();
 
     for (let j = 0; j < n; j++) {
-      number = Math.random() * (max - min) + min;
+      number = Math.random() * (MAX - MIN) + MIN;
       new_array.push(Math.round(number));
     } 
     array.push(new_array);
@@ -156,20 +154,20 @@ function produceArray(n, min, max) {
 function findClusters(array) {
 
   let clusters = new Array();           
-  const length = array.length;
+  const LENGTH = array.length;
   
   // Check for clusters in rows
-  for (let i = 0; i < length; i++) {
+  for (let i = 0; i < LENGTH; i++) {
 
     let row_cluster = [];
 
-    for (let j = 1; j < length; j++) {
+    for (let j = 1; j < LENGTH; j++) {
       if (array[i][j-1] == array[i][j] && row_cluster.length == 0) {
         row_cluster.push([i, j-1], [i, j]);
       } 
       else if (array[i][j-1] == array[i][j]) {
         row_cluster.push([i, j]);
-        if (j == (length - 1) && row_cluster.length >= 3) {
+        if (j == (LENGTH - 1) && row_cluster.length >= 3) {
           clusters.push(row_cluster);
           row_cluster = []; 
         }
@@ -184,18 +182,18 @@ function findClusters(array) {
   }  
       
   // Check for clusters in columns
-  for (let i = 0; i < length; i++) {
+  for (let i = 0; i < LENGTH; i++) {
 
     let col_cluster = [];
 
-    for (let j = 1; j < length; j++) {
+    for (let j = 1; j < LENGTH; j++) {
 
       if (array[j-1][i] == array[j][i] && col_cluster.length == 0) {
         col_cluster.push([j-1, i], [j, i])
       } 
       else if (array[j-1][i] == array[j][i]) {
         col_cluster.push([j, i]);
-        if (j == (length - 1) && col_cluster.length >= 3) {
+        if (j == (LENGTH - 1) && col_cluster.length >= 3) {
           clusters.push(col_cluster);
           col_cluster = [];
         }
