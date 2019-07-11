@@ -24,9 +24,6 @@ const gridSize = 8;
 const min = 1;
 const max = 7;
 
-//Generate map
-let map = generateMap(gridSize, min, max);
-
 //Map code
 const CHICK = 1;
 const COW = 2;
@@ -56,9 +53,7 @@ button.addEventListener("click", clickHandler, false);
 
 /* "New Game" button click handler */
 
-function clickHandler()
-{
-  map = generateMap(gridSize, min, max);
+function clickHandler() {
   render();
 }
 
@@ -66,6 +61,8 @@ function clickHandler()
 /* Function renders the grid of tiles */
 
 function render() {
+
+  let map = generateMap(gridSize, min, max);
 
   // Clear the stage 
   if (stage.hasChildNodes()) {
