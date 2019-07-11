@@ -21,17 +21,8 @@ const stage = document.querySelector("#stage");
 const gridSize = 8;
 
 //Values min and max for the map.
-const min = 1;
-const max = 7;
-
-//Map code
-const CHICK = 1;
-const COW = 2;
-const PARROT = 3; 
-const CROCODILE = 4;
-const ELEPHANT = 5;
-const HIPPO = 6;
-const PIG = 7;
+const min = 0;
+const max = 6;
 
 //The size of the cell
 const SIZE = 40;
@@ -43,6 +34,17 @@ const SPACE = 5;
 const ROWS = gridSize;
 const COLS = gridSize;
 
+//Source: https://www.kenney.nl/assets/animal-pac
+const IMAGES = [
+  "./animals/icons/chick.png",
+  "./animals/icons/cow.png",
+  "./animals/icons/crocodile.png",
+  "./animals/icons/elephant.png",
+  "./animals/icons/hippo.png",
+  "./animals/icons/parrot.png",
+  "./animals/icons/pig.png",
+];
+
 render();
 
 //New game button
@@ -53,7 +55,7 @@ button.addEventListener("click", clickHandler, false);
 
 /* "New Game" button click handler */
 
-function clickHandler() {
+function clickHandler(){
   render();
 }
 
@@ -80,31 +82,16 @@ function render() {
       cell.setAttribute("class", "cell");
       stage.appendChild(cell);
 
-      if(map[row][column] === COW) {
-        cell.src = "./animals/cow.png"; //Source: https://www.kenney.nl/assets/animal-pac
-      }
-      else if(map[row][column] === CHICK) {
-        cell.src = "./animals/chick.png";
-      }
-      else if(map[row][column] === PARROT) {
-        cell.src = "./animals/parrot.png";
-      }
-      else if(map[row][column] === CROCODILE) {
-        cell.src = "./animals/crocodile.png";
-      }
-      else if(map[row][column] === HIPPO) {
-        cell.src = "./animals/hippo.png";
-      }
-      else if(map[row][column] === ELEPHANT) {
-        cell.src = "./animals/elephant.png";
-      }
-      else if(map[row][column] === PIG) {
-        cell.src = "./animals/pig.png";
+      for (let i = 0; i <= IMAGES.length; i++) {
+
+        if (map[row][column] === i) {
+          cell.src = IMAGES[i]; 
+        }
       }
 
       //Position the cell, 5 pixels around it
       cell.style.top = row * (SIZE + SPACE)+ "px";
-      cell.style.left = column * (SIZE + SPACE) + "px";
+      cell.style.left = column * (SIZE + SPACE) + "px";  
     }
   }
 }
