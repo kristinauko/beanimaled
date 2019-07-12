@@ -108,7 +108,7 @@ function generateMap(gridSize) {
     generatedMap = produceArray(gridSize);
     clusters = findClusters(generatedMap);
     for (let cluster of clusters) {
-      generatedMap = fixCluster(cluster, generatedMap);
+      generatedMap = tryFixCluster(cluster, generatedMap);
     } 
     count += 1;  
     clusters = findClusters(generatedMap);
@@ -209,7 +209,7 @@ function findClusters(array) {
 
 /*Function fixes cluster and returns valid (if possible) two-dimentional array*/
 
-function fixCluster(cluster, array) {
+function tryFixCluster(cluster, array) {
 
   let xDirection = 0;
   let yDirection = 0;
