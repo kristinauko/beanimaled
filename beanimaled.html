@@ -79,7 +79,7 @@ function render() {
 
       for (let i = 0; i <= IMAGES.length; i++) {
 
-        if (map[row][column] === i) {
+        if (map[row][column] == i) {
           cell.src = IMAGES[i]; 
         }
       }
@@ -101,17 +101,12 @@ function render() {
  */
 
 function generateMap(gridSize) {
-
   let generatedMap = [];
   let clusters = [null];
   let count = 0;
-
-
   while (clusters.length != 0 && count != 5) {
-
     generatedMap = produceArray(gridSize);
     clusters = findClusters(generatedMap);
-
     for (let cluster of clusters) {
       generatedMap = fixCluster(cluster, generatedMap);
     } 
@@ -123,7 +118,7 @@ function generateMap(gridSize) {
     return generatedMap;
   } 
   else {
-    generateMap(gridSize);
+    return generateMap(gridSize, min, max);
   } 
 }
 
@@ -149,63 +144,66 @@ function produceArray(n) {
 }
 
 
-/* Function finds clusters which is three or more items standing next to each other */
+/* Function finds clusters which is three or more items located next to each other */
 
 function findClusters(array) {
-
-  let clusters = new Array();           
-  const LENGTH = array.length;
   
-  // Check for clusters in rows
-  for (let i = 0; i < LENGTH; i++) {
+  const LENGTH = array.length;
+  let clusters = new Array();           
+  let direction = "right";
 
-    let row_cluster = [];
+  for (let k = 0; k < 2; k++) {
 
-    for (let j = 1; j < LENGTH; j++) {
-      if (array[i][j-1] == array[i][j] && row_cluster.length == 0) {
-        row_cluster.push([i, j-1], [i, j]);
-      } 
-      else if (array[i][j-1] == array[i][j]) {
-        row_cluster.push([i, j]);
-        if (j == (LENGTH - 1) && row_cluster.length >= 3) {
-          clusters.push(row_cluster);
-          row_cluster = []; 
+    if (k == 1) {
+      direction = "down";
+    }
+
+    for (let i = 0; i < LENGTH; i++) {
+
+      let cluster = new Array();
+
+      for (let j = 1; j < LENGTH; j++) {
+
+        let xPrevious = null; 
+        let yPrevious = null;
+        let x = null;
+        let y = null;
+
+        if (direction == "right") {
+              //Check for clusters in rows
+              xPrevious = 0;
+              yPrevious = 1;
+              x = i;
+              y = j;
+          }
+          else {
+              // Check for clusters in columns
+              xPrevious = 1;
+              yPrevious = 0;
+              x = j;
+              y = i;
         }
-      } 
-      else {
-        if (row_cluster.length >= 3) {
-          clusters.push(row_cluster);
+
+        if (array[x - xPrevious][y - yPrevious] == array[x][y] && cluster.length == 0) {
+          cluster.push([x - xPrevious, y - yPrevious], [x, y]);
         } 
-        row_cluster = [];
-      }
-    }     
-  }  
-      
-  // Check for clusters in columns
-  for (let i = 0; i < LENGTH; i++) {
-
-    let col_cluster = [];
-
-    for (let j = 1; j < LENGTH; j++) {
-
-      if (array[j-1][i] == array[j][i] && col_cluster.length == 0) {
-        col_cluster.push([j-1, i], [j, i])
-      } 
-      else if (array[j-1][i] == array[j][i]) {
-        col_cluster.push([j, i]);
-        if (j == (LENGTH - 1) && col_cluster.length >= 3) {
-          clusters.push(col_cluster);
-          col_cluster = [];
+        else if (array[x - xPrevious][y-yPrevious] == array[x][y]) {
+          cluster.push([x, y]);
+          if (j == (LENGTH - 1) && cluster.length >= 3) {
+            clusters.push(cluster);
+            cluster = []; 
+          }
+        } 
+        else {
+          if (cluster.length >= 3) {
+            clusters.push(cluster);
+          } 
+          cluster = [];
         }
-      } 
-      else {
-        if (col_cluster.length >= 3) {
-          clusters.push(col_cluster);
-        }  
-        col_cluster = [];  
-      }
-    }     
-  } return clusters
+      }      
+    }  
+  } console.log("CLUSTER", clusters)
+  return clusters
 }
 
 
@@ -242,7 +240,7 @@ function fixCluster(cluster, array) {
     let y = c[1];
 
     if (array[x][y] != array[x + xDirection][y + yDirection]) {
-      swapTiles(array, x, y, xDirection, yDirection);
+      array = swapTiles(array, x, y, xDirection, yDirection);
       break;
     } 
   } return array
@@ -302,10 +300,11 @@ function findMoves(array) {
 /* Function swaps two tiles */
 
 function swapTiles(array, x, y, xDirection, yDirection) {
-
+  console.log("before swapping", array);
   let temp = array[x][y];
   array[x][y] = array[x + xDirection][y + yDirection]; 
   array[x + xDirection][y + yDirection] = temp; 
+  console.log("Swapped", array);
   return array
 }
 
