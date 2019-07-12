@@ -254,46 +254,50 @@ function findMoves(array) {
   let moves = [];
   let temp = 0;
   const LENGTH = array.length;
+  let direction = "right";
 
-  // Check horizontal swap
-  for (let i = 0; i < LENGTH; i++) {
+  for (let k = 0; k < 2; k++) {
+    let move = [];
 
-    let move = 0;
-
-    for (let j = 0; j < LENGTH - 1; j++) {
-      temp = array[i][j];
-      array[i][j] = array[i][j+1];
-      array[i][j+1] = temp;
-
-      move = findClusters(array);
-
-      if (move.length != 0) {
-          moves.push(move);
-      }
-      array[i][j+1] = array[i][j];
-      array[i][j] = temp;
+    if (k == 1) {
+      direction = "down";
     }
-  }
 
-  // Check vertical swap
-  for (let i = 0; i < LENGTH; i++) {
+    for (let i = 0; i < LENGTH; i++) {
 
-    let move = 0;
+      for (let j = 1; j < LENGTH; j++) {
 
-    for (let j = 0; j < LENGTH - 1; j++) {
-      temp = array[j][i];
-      array[j][i] = array[j+1][i];
-      array[j+1][i] = temp;
+        let xDirection = null; 
+        let yDirection = null;
+        let x = null;
+        let y = null;
 
-      move = findClusters(array);
+        if (direction == "right") {
+          //Check for moves in rows
+          xDirection = 0;
+          yDirection = -1;
+          x = i;
+          y = j;
+        }
+        else {
+          // Check for moves in columns
+          xDirection = -1;
+          yDirection = 0;
+          x = j;
+          y = i;
+        }
 
-      if (move.length != 0) {
-          moves.push(move);
+        array = swapTiles(array, x, y, xDirection, yDirection);
+        move = findClusters(array);
+
+        if (move.length != 0) {
+            moves.push(move);
+        }
+        array = swapTiles(array, x, y, xDirection, yDirection);
       }
-      array[j+1][i] = array[j][i];
-      array[j][i] = temp;
     }
-  } return moves;
+  } console.log("Moves", moves);
+  return moves;
 }
 
 
