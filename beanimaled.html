@@ -59,7 +59,7 @@ function clickHandler(){
 
 function render() {
 
-  let map = generateMap(gridSize);
+  let map = provideValidMap(gridSize);
 
   // Clear the stage 
   if (stage.hasChildNodes()) {
@@ -92,36 +92,48 @@ function render() {
 }
 
 
-/* Driver function creates and checks for valid map:
-1) generates map;
-2) checks for clusters;
-3) fixes clusters; 
-4) if clusters still exist, repeats the sequence five more times. 
-5) checks for eligible moves - at least three, otherwise generates new map.
- */
+/* Function generates map and proves it is valid */
 
-function generateMap(gridSize) {
+function provideValidMap(gridSize) {
 
-  let generatedMap = [];
+  let generatedMap = null;
   let clusters = [null];
-  let count = 0;
 
-  while (clusters.length != 0 && count != 5) {
+  while (generatedMap == null || clusters.length != 0) {
+
     generatedMap = produceArray(gridSize);
-    clusters = findClusters(generatedMap);
+    generatedMap = fixMap(generatedMap) 
+
+    if (generatedMap != null) {
+      clusters = findClusters(generatedMap);
+    } 
+  }
+  return generatedMap;
+}
+
+
+/* Function attemps to fix given map*/
+
+function fixMap(generatedMap) {
+
+  let clusters = [null];
+  let moves = new Array();
+  
+  clusters = findClusters(generatedMap);
+
     for (let cluster of clusters) {
       generatedMap = tryFixCluster(cluster, generatedMap);
     } 
-    count += 1;  
-    clusters = findClusters(generatedMap);
-  } 
+  
   moves = findMoves(generatedMap);
-  if (moves.length > 3) {
-    return generatedMap;
-  } 
+  clusters = findClusters(generatedMap);
+
+  if (moves.length < 3 || clusters.length != 0) {
+    return null;
+  }
   else {
-    return generateMap(gridSize, min, max);
-  } 
+    return generatedMap;
+  }
 }
 
 
@@ -191,8 +203,7 @@ function findClusters(array) {
         }
       }      
     }  
-  } console.log("CLUSTER", clusters)
-  return clusters
+  } return clusters
 }
 
 
@@ -236,7 +247,8 @@ function tryFixCluster(cluster, array) {
 }
 
 
-/* Function finds all possible moves in two-dimentional array */
+/* Function finds all possible moves in two-dimentional array
+Assumption: findMoves() will only be called on arrays that are known to not contain any clusters */
 
 function findMoves(array) {
 
@@ -272,8 +284,7 @@ function findMoves(array) {
         array = swapTiles(array, x, y, xDirection, yDirection);
       }
     }
-  } console.log("Moves", moves);
-  return moves;
+  } return moves;
 }
 
 
@@ -281,11 +292,11 @@ function findMoves(array) {
 
 function swapTiles(array, x, y, xDirection, yDirection) {
 
-  console.log("before swapping", array);
   let temp = array[x][y];
+
   array[x][y] = array[x + xDirection][y + yDirection]; 
   array[x + xDirection][y + yDirection] = temp; 
-  console.log("Swapped", array);
+
   return array
 }
 
