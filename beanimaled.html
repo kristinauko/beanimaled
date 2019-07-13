@@ -15,20 +15,16 @@
 <script>
 
 //Reference to element "stage"
-const stage = document.querySelector("#stage");
+const STAGE = document.querySelector("#stage");
 
 //Number of rows and cols
-const gridSize = 8;
+const GRIDSIZE = 8;
 
 //The size of the cell
 const SIZE = 40;
 
 //Space between cells
 const SPACE = 5;
-
-//Display the array
-const ROWS = gridSize;
-const COLS = gridSize;
 
 //Source: https://www.kenney.nl/assets/animal-pac
 const IMAGES = [
@@ -59,12 +55,16 @@ function clickHandler(){
 
 function render() {
 
-  let map = provideValidMap(gridSize);
+  //Display the array
+  const ROWS = GRIDSIZE;
+  const COLS = GRIDSIZE;
 
-  // Clear the stage 
-  if (stage.hasChildNodes()) {
+  let map = provideValidMap(GRIDSIZE);
+
+  // Clear the STAGE 
+  if (STAGE.hasChildNodes()) {
     for (let i = 0; i < ROWS * COLS; i++) {
-      stage.removeChild(stage.firstChild);
+      STAGE.removeChild(STAGE.firstChild);
     }
   }
 
@@ -75,7 +75,7 @@ function render() {
       //HTML element img - cell
       let cell = document.createElement("img");
       cell.setAttribute("class", "cell");
-      stage.appendChild(cell);
+      STAGE.appendChild(cell);
 
       for (let i = 0; i <= IMAGES.length; i++) {
 
@@ -94,14 +94,14 @@ function render() {
 
 /* Function generates map and proves it is valid */
 
-function provideValidMap(gridSize) {
+function provideValidMap(GRIDSIZE) {
 
   let generatedMap = null;
   let clusters = [null];
 
   while (generatedMap == null || clusters.length != 0) {
 
-    generatedMap = produceArray(gridSize);
+    generatedMap = produceArray(GRIDSIZE);
     generatedMap = fixMap(generatedMap) 
 
     if (generatedMap != null) {
@@ -216,7 +216,7 @@ function tryFixCluster(cluster, array) {
 
   if (cluster[0][0] == cluster[1][0] && cluster[1][0] == cluster[2][0]) {
     //If this is the most right cell in row, move the item left
-    if (cluster[0][0] == gridSize - 1) {
+    if (cluster[0][0] == GRIDSIZE - 1) {
         xDirection = -1;
     } 
     else {
@@ -226,7 +226,7 @@ function tryFixCluster(cluster, array) {
   } 
   else if (cluster[0][1] == cluster[1][1] && cluster[1][1] == cluster[2][1]) {
     //If this is the most bottom cell in column, move the item up
-    if (cluster[0][1] == gridSize - 1) {
+    if (cluster[0][1] == GRIDSIZE - 1) {
         yDirection = -1;
     } 
     else {
