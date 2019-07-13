@@ -101,9 +101,11 @@ function render() {
  */
 
 function generateMap(gridSize) {
+
   let generatedMap = [];
   let clusters = [null];
   let count = 0;
+
   while (clusters.length != 0 && count != 5) {
     generatedMap = produceArray(gridSize);
     clusters = findClusters(generatedMap);
@@ -164,30 +166,17 @@ function findClusters(array) {
 
       for (let j = 1; j < LENGTH; j++) {
 
-        let xPrevious = null; 
-        let yPrevious = null;
-        let x = null;
-        let y = null;
+        directions = getXYDirections(direction, i, j);
 
-        if (direction == "right") {
-              //Check for clusters in rows
-              xPrevious = 0;
-              yPrevious = 1;
-              x = i;
-              y = j;
-          }
-          else {
-              // Check for clusters in columns
-              xPrevious = 1;
-              yPrevious = 0;
-              x = j;
-              y = i;
-        }
+        let x = directions.xValue;
+        let y = directions.yValue;
+        let xPrevious = directions.xDirection;
+        let yPrevious = directions.yDirection;
 
-        if (array[x - xPrevious][y - yPrevious] == array[x][y] && cluster.length == 0) {
-          cluster.push([x - xPrevious, y - yPrevious], [x, y]);
+        if (array[x + xPrevious][y + yPrevious] == array[x][y] && cluster.length == 0) {
+          cluster.push([x + xPrevious, y + yPrevious], [x, y]);
         } 
-        else if (array[x - xPrevious][y-yPrevious] == array[x][y]) {
+        else if (array[x + xPrevious][y + yPrevious] == array[x][y]) {
           cluster.push([x, y]);
           if (j == (LENGTH - 1) && cluster.length >= 3) {
             clusters.push(cluster);
@@ -267,25 +256,12 @@ function findMoves(array) {
 
       for (let j = 1; j < LENGTH; j++) {
 
-        let xDirection = null; 
-        let yDirection = null;
-        let x = null;
-        let y = null;
+        directions = getXYDirections(direction, i, j);
 
-        if (direction == "right") {
-          //Check for moves in rows
-          xDirection = 0;
-          yDirection = -1;
-          x = i;
-          y = j;
-        }
-        else {
-          // Check for moves in columns
-          xDirection = -1;
-          yDirection = 0;
-          x = j;
-          y = i;
-        }
+        let x = directions.xValue;
+        let y = directions.yValue;
+        let xDirection = directions.xDirection;
+        let yDirection = directions.yDirection;
 
         array = swapTiles(array, x, y, xDirection, yDirection);
         move = findClusters(array);
@@ -304,12 +280,42 @@ function findMoves(array) {
 /* Function swaps two tiles */
 
 function swapTiles(array, x, y, xDirection, yDirection) {
+
   console.log("before swapping", array);
   let temp = array[x][y];
   array[x][y] = array[x + xDirection][y + yDirection]; 
   array[x + xDirection][y + yDirection] = temp; 
   console.log("Swapped", array);
   return array
+}
+
+
+/* Helper function to get directions for moving x and y, used for swapping tiles */
+
+function getXYDirections(direction, i, j) {
+
+  directions = {};
+  let xDir = null; 
+  let yDir = null;
+  let x = null;
+  let y = null;
+
+  if (direction == "right") {
+    //Check for clusters in rows
+    xDir = 0;
+    yDir = -1;
+    x = i;
+    y = j;
+  }
+  else {
+    // Check for clusters in columns
+    xDir = -1;
+    yDir = 0;
+    x = j;
+    y = i;
+  }
+  directions = {xValue: x, yValue: y, xDirection: xDir, yDirection:yDir}
+  return directions
 }
 
 
