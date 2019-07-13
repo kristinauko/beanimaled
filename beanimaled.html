@@ -98,7 +98,7 @@ function provideValidMap(GRIDSIZE) {
 
   while (generatedMap == null || clusters.length != 0) {
     generatedMap = produceArray(GRIDSIZE);
-    generatedMap = fixMap(generatedMap);
+    generatedMap = tryFixMap(generatedMap);
 
     if (generatedMap != null) {
       clusters = findClusters(generatedMap);
@@ -109,7 +109,7 @@ function provideValidMap(GRIDSIZE) {
 
 /* Function attemps to fix given map*/
 
-function fixMap(generatedMap) {
+function tryFixMap(generatedMap) {
 
   let clusters = [null];
   let moves = new Array();
@@ -242,7 +242,7 @@ function tryFixCluster(cluster, array) {
 
 
 /* Function finds all possible moves in two-dimentional array
-Assumption: findMoves() will only be called on arrays that are known to not contain any clusters */
+Assumption: function will only be called on arrays that are known to not contain any clusters */
 
 function findMoves(array) {
 
