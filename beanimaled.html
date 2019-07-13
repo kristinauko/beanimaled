@@ -55,7 +55,6 @@ function clickHandler(){
 
 function render() {
 
-  //Display the array
   const ROWS = GRIDSIZE;
   const COLS = GRIDSIZE;
 
@@ -69,7 +68,6 @@ function render() {
   }
 
   for(let row = 0; row < ROWS; row++) {
-
     for(let column = 0; column < COLS; column++) {
 
       //HTML element img - cell
@@ -78,7 +76,6 @@ function render() {
       STAGE.appendChild(cell);
 
       for (let i = 0; i <= IMAGES.length; i++) {
-
         if (map[row][column] == i) {
           cell.src = IMAGES[i]; 
         }
@@ -100,15 +97,13 @@ function provideValidMap(GRIDSIZE) {
   let clusters = [null];
 
   while (generatedMap == null || clusters.length != 0) {
-
     generatedMap = produceArray(GRIDSIZE);
-    generatedMap = fixMap(generatedMap) 
+    generatedMap = fixMap(generatedMap);
 
     if (generatedMap != null) {
       clusters = findClusters(generatedMap);
     } 
-  }
-  return generatedMap;
+  } return generatedMap;
 }
 
 
@@ -121,10 +116,10 @@ function fixMap(generatedMap) {
   
   clusters = findClusters(generatedMap);
 
-    for (let cluster of clusters) {
-      generatedMap = tryFixCluster(cluster, generatedMap);
-    } 
-  
+  for (let cluster of clusters) {
+    generatedMap = tryFixCluster(cluster, generatedMap);
+  } 
+
   moves = findMoves(generatedMap);
   clusters = findClusters(generatedMap);
 
@@ -177,7 +172,6 @@ function findClusters(array) {
       let cluster = new Array();
 
       for (let j = 1; j < LENGTH; j++) {
-
         directions = getXYDirections(direction, i, j);
 
         let x = directions.xValue;
@@ -203,7 +197,7 @@ function findClusters(array) {
         }
       }      
     }  
-  } return clusters
+  } return clusters;
 }
 
 
@@ -243,7 +237,7 @@ function tryFixCluster(cluster, array) {
       array = swapTiles(array, x, y, xDirection, yDirection);
       break;
     } 
-  } return array
+  } return array;
 }
 
 
@@ -258,6 +252,7 @@ function findMoves(array) {
   let direction = "right";
 
   for (let k = 0; k < 2; k++) {
+
     let move = [];
 
     if (k == 1) {
@@ -265,7 +260,6 @@ function findMoves(array) {
     }
 
     for (let i = 0; i < LENGTH; i++) {
-
       for (let j = 1; j < LENGTH; j++) {
 
         directions = getXYDirections(direction, i, j);
@@ -297,7 +291,7 @@ function swapTiles(array, x, y, xDirection, yDirection) {
   array[x][y] = array[x + xDirection][y + yDirection]; 
   array[x + xDirection][y + yDirection] = temp; 
 
-  return array
+  return array;
 }
 
 
@@ -305,7 +299,7 @@ function swapTiles(array, x, y, xDirection, yDirection) {
 
 function getXYDirections(direction, i, j) {
 
-  directions = {};
+  let directions = {};
   let xDir = null; 
   let yDir = null;
   let x = null;
@@ -325,8 +319,8 @@ function getXYDirections(direction, i, j) {
     x = j;
     y = i;
   }
-  directions = {xValue: x, yValue: y, xDirection: xDir, yDirection:yDir}
-  return directions
+  directions = {xValue: x, yValue: y, xDirection: xDir, yDirection:yDir};
+  return directions;
 }
 
 
